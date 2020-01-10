@@ -8,6 +8,8 @@ using EmployeeDataAccess;
 using System.Web.Http.Cors;
 
 namespace WebAPIDemo.Controllers
+
+    //Please ignore this line
 {
     //[EnableCorsAttribute("*", "*", "*")]  // This is to enable cors for all the method within this controller globally.
     
