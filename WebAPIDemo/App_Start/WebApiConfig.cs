@@ -38,6 +38,17 @@ namespace WebAPIDemo
                 defaults: new { id = RouteParameter.Optional }
             );
 
+
+            //Registering a class "RequireHttpsAttribute.cs" class which will be used as a filter. 
+            // This will be used to auto redirect a http request to https request.
+
+            config.Filters.Add(new RequireHttpsAttribute());
+
+            //Registering a class which provides basic authentication.
+            config.Filters.Add(new BasicAuthenticationAttribute());
+
+
+
             //Registering new custom formatter which created above
 
             // config.Formatters.Add(new CustomJsonFormatter());

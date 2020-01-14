@@ -9,7 +9,8 @@
             var ulemployees = $('#ulEmployees');
             $('#btnEmp').click(function () {
 
-               
+                var uname = $('#txtusername').val();
+                var upsw = $('#txtpassword').val();
                 //---This is when we want to request with data type as jsonp using JSONP
                 //$.ajax({
                 //    type: 'GET',
@@ -30,14 +31,23 @@
                  $.ajax({
                     type: 'GET',
                     url: 'https://localhost:44397/api/employees',
-                    dataType: 'json',     
+                     dataType: 'json',
+                     headers: {
+                         'Authorization': 'Basic ' + btoa(uname + ':' + upsw)
+                     },
                     success: function (data) {
                         ulemployees.empty();
                         $.each(data, function (index, val) {
-                            var fullname = val.FirstName + ' ' + val.LastName;
+                            var fullname = val.FirstName + ' ' + val.LastName + ' (' + val.Gender + ')';
                             ulemployees.append('<li>' + fullname + '</li>');
                         });
-                    }
+                     },
+                     complete: function (jqXHR) {
+                         if (jqXHR.status == '401') {
+                             ulemployees.empty();
+                             ulemployees.append('<li style="color:Red">' + jqXHR.status + ':' + jqXHR.statusText + '</li>');
+                         }
+                     }
 
                 });
             });
@@ -49,6 +59,9 @@
     </script>
 </head>
 <body>
+    UserName: <input type="text" id="txtusername" />
+    Password: <input type="password" id="txtpassword" />
+    </br>
     <input type="button" id="btnEmp" value="Get All Employee" />
     <input type="button" id="clear" value="Clear" />
     <ul id="ulEmployees"></ul>

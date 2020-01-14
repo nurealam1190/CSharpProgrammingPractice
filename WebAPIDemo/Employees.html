@@ -7,7 +7,11 @@
     <script type="text/javascript">
         $(document).ready(function () {
             var ulemployees = $('#ulEmployees');
+            
             $('#btnEmp').click(function () {
+
+                var uname = $('#txtusername').val();
+                var upsw = $('#txtpassword').val();
 
                 //---This is when we want to request with data type as jsonp using JSONP
                 //$.ajax({
@@ -29,14 +33,23 @@
                  $.ajax({
                     type: 'GET',
                     url: 'api/employees',
-                    dataType: 'json',     
+                     dataType: 'json',
+                     headers: {
+                         'Authorization': 'Basic ' + btoa(uname + ':' + upsw)
+                     },
                     success: function (data) {
                         ulemployees.empty();
                         $.each(data, function (index, val) {
-                            var fullname = val.FirstName + ' ' + val.LastName;
+                            var fullname = val.FirstName + ' ' + val.LastName + ' (' + val.Gender + ')';
                             ulemployees.append('<li>' + fullname + '</li>');
                         });
-                    }
+                     },
+                     complete: function (jqXHR) {
+                         if (jqXHR.status == '401') {
+                             ulemployees.empty();
+                             ulemployees.append('<li style="color:Red">' + jqXHR.status + ': ' + jqXHR.statusText + '</li>');
+                         }
+                     }
 
                 });
             });
@@ -48,7 +61,9 @@
     </script>
 </head>
 <body>
-    <input type="button" id="btnEmp" value="Get All Employee" />
+    UserName: <input type="text" id="txtusername" />
+    Password: <input type="password" id="txtpassword" />
+    <input type="button" id="btnEmp" value="Authenticate and Get Employee" />
     <input type="button" id="clear" value="Clear" />
     <ul id="ulEmployees"></ul>
 </body>

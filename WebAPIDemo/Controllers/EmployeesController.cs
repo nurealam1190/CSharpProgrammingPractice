@@ -6,11 +6,16 @@ using System.Net.Http;
 using System.Web.Http;
 using EmployeeDataAccess;
 using System.Web.Http.Cors;
+using System.Threading;
 
 namespace WebAPIDemo.Controllers
 
-    //Please ignore this line
+    
 {
+    [RequireHttps] // This is to mention that this class requires https request. We can also mention this on top of a specific action.
+    //We can also register it in webapi.config file if it require for all the application.
+
+
     //[EnableCorsAttribute("*", "*", "*")]  // This is to enable cors for all the method within this controller globally.
     
     public class EmployeesController : ApiController
@@ -28,11 +33,13 @@ namespace WebAPIDemo.Controllers
         //Anything other than this will throw an error 404 bad request.
 
         //[DisableCors] //this is disable cors for this method
+        //[RequireHttps] //this is to mention that this perticular action requires https request.
         public HttpResponseMessage Get(string gender="All")
         {
 
             EmployeeDBEntities entities = new EmployeeDBEntities();
-            switch(gender.ToLower())
+            string username = Thread.CurrentPrincipal.Identity.Name;
+            switch(username.ToLower())
             {
                 case "all":
                     return Request.CreateResponse(HttpStatusCode.OK, entities.Employees.ToList());
@@ -44,7 +51,8 @@ namespace WebAPIDemo.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, entities.Employees.Where(e => e.Gender.ToLower() == "male").ToList());
 
                 default:
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Mentioned gender " +gender + " is invalid. It should be either Male,Female or All");
+                    return Request.CreateResponse(HttpStatusCode.BadRequest);
+                    // return Request.CreateResponse(HttpStatusCode.BadRequest, "Mentioned gender " +gender + " is invalid. It should be either Male,Female or All");
             }
 
             
