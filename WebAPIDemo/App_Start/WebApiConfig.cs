@@ -69,7 +69,7 @@ namespace WebAPIDemo
             //config.Formatters.Remove(config.Formatters.XmlFormatter);
 
             //This line is to get the response always in xml formatter irrespective of the type mentioned in Accept header while request
-            //Here we have removed the jsonformatter so it will always return in json format.
+            //Here we have removed the jsonformatter so it will always return in xml format.
 
             //config.Formatters.Remove(config.Formatters.JsonFormatter);
 
