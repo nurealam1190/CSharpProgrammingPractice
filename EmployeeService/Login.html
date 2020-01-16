@@ -38,7 +38,7 @@
                         </td>
 
                     </tr>
-                    
+
                     <tr class="success">
                         <td colspan="2">
                             <input id="btnLogin" type="button" class="btn btn-success" value="Login" />
@@ -46,7 +46,27 @@
                     </tr>
                 </tbody>
             </table>
-            
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="success">
+                        <td colspan="2">
+                            Social Login
+                            
+                        </td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                   
+                    <tr class="success">
+                        <td colspan="2">
+                            <input id="btnGoogleLogin" type="button" class="btn btn-success" value="Login With Google" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
             <div class="alert alert-danger collapse" id="divError">
                 <a href="#" id="linkClose" class=" close">&times;</a>
                 <div id="errorText">
@@ -59,11 +79,29 @@
     </div>
     <script src="Scripts/jquery-3.4.1.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
-
+    <script src="Scripts/GoogleAuthentication.js"></script>
     <script type="text/javascript">
 
+         //To remove/get/set accesstoken from local
+
+       // localStorage.setItem('accesstoken'); ---Set
+        // localStorage.getItem('accesstoken'); --Get
+        // localStorage.removeItem('accesstoken'); ---Remove
+
+        //To remove/get/set accesstoken from session
+
+       // sessionStorage.setItem('accesstoken'); ---Set
+        // sessionstorage.getItem('accesstoken'); --Get
+        // sessionstorage.removeItem('accesstoken'); ---Remove
 
         $(document).ready(function () {
+
+            getAccessToken();
+
+            $('#btnGoogleLogin').click(function () {
+
+                window.location.href = "/api/Account/ExternalLogin?provider=Google&response_type=token&client_id=self&redirect_uri=https%3A%2F%2Flocalhost%3A44372%2FLogin.html&state=JxPJhwhJj1q-4X-HGTyZekUw8-7atSLG8Uwq9FiD4l41";
+            });
 
             $('#linkClose').click(function () {
                 $('#divError').hide('fade');
@@ -82,9 +120,11 @@
                     },
 
                     success: function (response) {
-                        //To store an item in session 
-
+                        
+                        //Below line is for storing accesstoken in session storage
                         sessionStorage.setItem('accesstoken', response.access_token);
+                        //Below line is for storing username in session storage
+                        sessionStorage.setItem('UserName', response.userName);
                         window.location.href = "Data.html";
                         //$('#errorText').text(JSON.stringify(response));
                         //$('#divError').show('fade');

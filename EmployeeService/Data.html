@@ -2,9 +2,157 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Data Page</title>
-</head>
-<body>
+    <title></title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
 
+</head>
+<body style="padding-top: 20px">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="well">
+            <input type="button" id="btnloademployees" class="btn btn-success" value="Load All Employees" />
+            <span id="spanusername" class="text-muted"></span>
+            <input type="button" id="btnlogout" class="btn btn-danger pull-right" value="Logout" />
+        </div>
+        <div class="well hidden" id="divData">
+            <table class=" table table-bordered" id="tblData">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            First Name
+                        </th>
+                        <th>
+                            Last Name
+                        </th>
+                        <th>
+                            Gender
+                        </th>
+                        <th>
+                            Salary
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tblbody"></tbody>
+            </table>
+        </div>
+
+            <div class="modal fade" tabindex="-1" id="errorModal" data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                &times;
+                            </button>
+                            <h4>
+                                Session Expired
+                            </h4>
+
+                        </div>
+                        <div class="modal-body">
+                            <h2>Please close this to login again.</h2>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn btn-success">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="alert alert-danger collapse" id="divError">
+                <a href="#" id="linkClose" class=" close">&times;</a>
+                <div id="errorText">
+
+                </div>
+            </div>
+
+        
+
+    </div>
+    <script src="Scripts/jquery-3.4.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        //To remove/get/set accesstoken from local
+
+       // localStorage.setItem('accesstoken'); ---Set
+        // localStorage.getItem('accesstoken'); --Get
+        // localStorage.removeItem('accesstoken'); ---Remove
+
+        //To remove/get/set accesstoken from session
+
+       // sessionStorage.setItem('accesstoken'); ---Set
+        // sessionstorage.getItem('accesstoken'); --Get
+        // localStorage.removeItem('accesstoken'); ---Remove
+
+        $(document).ready(function () {
+
+            if (sessionStorage.getItem('accesstoken') == null) {
+                window.location.href ="Login.html"
+            }
+
+            $('#spanusername').text('Hello '+ sessionStorage.getItem('UserName'));
+
+            $('#linkClose').click(function () {
+                $('#divError').hide('fade');
+               
+            });
+            $('#errorModal').on('hidden.bs.modal', function () {
+                window.location.href = "Login.html";
+            });
+            $('#btnloademployees').click(function () {
+               
+                
+                    $.ajax({
+
+                    url: '/api/Employees',
+                    method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + sessionStorage.getItem('accesstoken')
+                    },
+
+                    success: function (data) {
+                        // $('#successModal').modal('show');
+                        $('#divData').removeClass('hidden');
+                        $('#tblbody').empty();
+                        $.each(data, function (index, value) {
+                            var row = $('<tr><td>' + value.ID + '</td><td>'
+                                + value.FirstName + '</td><td>'
+                                + value.LastName + '</td><td>'
+                                + value.Gender + '</td><td>'
+                                + value.Salary + '</td></tr>');
+
+
+                            $('#tblData').append(row);
+                        });
+                    },
+                    error: function (jqXHR) {
+                        if (jqXHR.status == '401') {
+                            $('#errorModal').modal('show');
+                            
+                        }
+                        else {
+                            $('#errorText').text(jqXHR.responseText);
+                            $('#divError').show('fade');
+                        }
+                        
+                    }
+
+                });            
+              
+            });
+            $('#btnlogout').click(function () {
+                //To remove accesstoken from local
+              //  localStorage.removeItem('accesstoken');
+                //To remove accesstoken from session
+                sessionStorage.removeItem('accesstoken');
+                window.location.href = "Login.html";
+            })
+        });
+    </script>
 </body>
+
 </html>
