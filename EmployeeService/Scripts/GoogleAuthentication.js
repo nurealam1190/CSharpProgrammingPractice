@@ -1,4 +1,4 @@
-﻿/// <reference path="jquery-3.4.1.min.js" />
+﻿/// <reference path="jquery-3.4.1.min.js" /> cooment
 function getAccessToken() {
 
     if (location.hash) {
