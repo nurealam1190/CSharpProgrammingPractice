@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApplication", "Client
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeService", "EmployeeService\EmployeeService.csproj", "{DA1E1C8D-7B8C-4A5F-A2E8-67836779D97B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPIStudentSample", "WebAPIStudentSample\WebAPIStudentSample.csproj", "{636A74F5-8CD4-46B7-AFAC-07F610FF911E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{DA1E1C8D-7B8C-4A5F-A2E8-67836779D97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA1E1C8D-7B8C-4A5F-A2E8-67836779D97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA1E1C8D-7B8C-4A5F-A2E8-67836779D97B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{636A74F5-8CD4-46B7-AFAC-07F610FF911E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{636A74F5-8CD4-46B7-AFAC-07F610FF911E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{636A74F5-8CD4-46B7-AFAC-07F610FF911E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{636A74F5-8CD4-46B7-AFAC-07F610FF911E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

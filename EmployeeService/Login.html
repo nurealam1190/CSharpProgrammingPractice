@@ -62,6 +62,7 @@
                     <tr class="success">
                         <td colspan="2">
                             <input id="btnGoogleLogin" type="button" class="btn btn-success" value="Login With Google" />
+                            <input id="btnFacebookLogin" type="button" class="btn btn-success" value="Login With Facebook" />
                         </td>
                     </tr>
                 </tbody>
@@ -101,6 +102,11 @@
             $('#btnGoogleLogin').click(function () {
 
                 window.location.href = "/api/Account/ExternalLogin?provider=Google&response_type=token&client_id=self&redirect_uri=https%3A%2F%2Flocalhost%3A44372%2FLogin.html&state=JxPJhwhJj1q-4X-HGTyZekUw8-7atSLG8Uwq9FiD4l41";
+            });
+
+            $('#btnFacebookLogin').click(function () {
+
+                window.location.href = "/api/Account/ExternalLogin?provider=Facebook&response_type=token&client_id=self&redirect_uri=https%3A%2F%2Flocalhost%3A44372%2FLogin.html&state=JxPJhwhJj1q-4X-HGTyZekUw8-7atSLG8Uwq9FiD4l41";
             });
 
             $('#linkClose').click(function () {
