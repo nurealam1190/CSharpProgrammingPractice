@@ -9,52 +9,36 @@
 <body style="padding-top: 20px">
     <div class="col-md-10 col-md-offset-1">
         <div class="well">
-            <table class="table table-bordered">
+            <input type="button" id="btnloademployees" class="btn btn-success" value="Load All Employees" />
+            <span id="spanusername" class="text-muted"></span>
+            <input type="button" id="btnlogout" class="btn btn-danger pull-right" value="Logout" />
+        </div>
+        <div class="well hidden" id="divData">
+            <table class=" table table-bordered" id="tblData">
                 <thead>
-                    <tr class="success">
-                        <td colspan="2">
-                            New User Registartion
-                            <a class="btn btn-success pull-right" href="Login.html">Login</a>
-                        </td>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            First Name
+                        </th>
+                        <th>
+                            Last Name
+                        </th>
+                        <th>
+                            Gender
+                        </th>
+                        <th>
+                            Salary
+                        </th>
                     </tr>
-
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            Email:
-                        </td>
-                        <td>
-                            <input type="text" id="txtEmail" placeholder="Enter Email">
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            Password:
-                        </td>
-                        <td>
-                            <input type="password" id="txtPassword" placeholder="Enter Password">
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            Confirm Password:
-                        </td>
-                        <td>
-                            <input type="password" id="txtConfirmPassword" placeholder="Confirm Password">
-                        </td>
-
-                    </tr>
-                    <tr class="success">
-                        <td colspan="2">
-                            <input id="btnRegister" type="button" class="btn btn-success" value="Register" />
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody id="tblbody"></tbody>
             </table>
-            <div class="modal fade" tabindex="-1" id="successModal" data-keyboard="false" data-backdrop="static">
+        </div>
+
+            <div class="modal fade" tabindex="-1" id="errorModal" data-keyboard="false" data-backdrop="static">
                 <div class="modal-dialog ">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -62,12 +46,12 @@
                                 &times;
                             </button>
                             <h4>
-                                Success
+                                Session Expired
                             </h4>
 
                         </div>
                         <div class="modal-body">
-                            <h2>Registration Successfull</h2>
+                            <h2>Please close this to login again.</h2>
                         </div>
                         <div class="modal-footer">
                             <button type="button" data-dismiss="modal" class="btn btn-success">
@@ -85,44 +69,88 @@
                 </div>
             </div>
 
-        </div>
+        
 
     </div>
     <script src="Scripts/jquery-3.4.1.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
 
     <script type="text/javascript">
+        //To remove/get/set accesstoken from local
 
+       // localStorage.setItem('accesstoken'); ---Set
+        // localStorage.getItem('accesstoken'); --Get
+        // localStorage.removeItem('accesstoken'); ---Remove
+
+        //To remove/get/set accesstoken from session
+
+       // sessionStorage.setItem('accesstoken'); ---Set
+        // sessionstorage.getItem('accesstoken'); --Get
+        // localStorage.removeItem('accesstoken'); ---Remove
 
         $(document).ready(function () {
 
+            if (sessionStorage.getItem('accesstoken') == null) {
+                window.location.href ="Login.html"
+            }
+
+            $('#spanusername').text('Hello '+ sessionStorage.getItem('UserName'));
+
             $('#linkClose').click(function () {
                 $('#divError').hide('fade');
+               
             });
-            $('#btnRegister').click(function () {
+            $('#errorModal').on('hidden.bs.modal', function () {
+                window.location.href = "Login.html";
+            });
+            $('#btnloademployees').click(function () {
+               
+                
+                    $.ajax({
 
-                $.ajax({
-
-                    url: '/api/Account/Register',
-                    method: 'POST',
-                    data: {
-                        email: $('#txtEmail').val(),
-                        password: $('#txtPassword').val(),
-                        confirmPassword: $('#txtConfirmPassword').val()
+                    url: '/api/Employees',
+                    method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + sessionStorage.getItem('accesstoken')
                     },
 
-                    success: function () {
-                         $('#successModal').modal('show');
+                    success: function (data) {
+                        // $('#successModal').modal('show');
+                        $('#divData').removeClass('hidden');
+                        $('#tblbody').empty();
+                        $.each(data, function (index, value) {
+                            var row = $('<tr><td>' + value.ID + '</td><td>'
+                                + value.FirstName + '</td><td>'
+                                + value.LastName + '</td><td>'
+                                + value.Gender + '</td><td>'
+                                + value.Salary + '</td></tr>');
+
+
+                            $('#tblData').append(row);
+                        });
                     },
                     error: function (jqXHR) {
-                        $('#errorText').text(jqXHR.responseText);
-                        $('#divError').show('fade');
+                        if (jqXHR.status == '401') {
+                            $('#errorModal').modal('show');
+                            
+                        }
+                        else {
+                            $('#errorText').text(jqXHR.responseText);
+                            $('#divError').show('fade');
+                        }
+                        
                     }
 
-                });
-
-
+                });            
+              
             });
+            $('#btnlogout').click(function () {
+                //To remove accesstoken from local
+              //  localStorage.removeItem('accesstoken');
+                //To remove accesstoken from session
+                sessionStorage.removeItem('accesstoken');
+                window.location.href = "Login.html";
+            })
         });
     </script>
 </body>
