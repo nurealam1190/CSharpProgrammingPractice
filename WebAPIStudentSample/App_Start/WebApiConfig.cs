@@ -18,14 +18,12 @@ namespace WebAPIStudentSample
             config.MapHttpAttributeRoutes();
 
             // Below line of code for versioning using query string. Created a new customcontrollerselector class
-            //which i am going to refer here.
+            //which i am going to refer here.      
 
-           
-
-           
-            config.Services.Replace(typeof(IHttpControllerSelector), new CustomControllerSelector(config));
+           config.Services.Replace(typeof(IHttpControllerSelector), new CustomControllerSelector(config));
 
 
+            //This is the default route created when you create webapi project.
             config.Routes.MapHttpRoute(
                 name: "DefaultConfig",
                 routeTemplate: "api/{controller}/{id}",
@@ -45,6 +43,15 @@ namespace WebAPIStudentSample
             //    routeTemplate: "api/v2/products/{id}",
             //    defaults: new { id = RouteParameter.Optional, Controller = "ProductsV2" }
             //); ;
+
+
+            //adding a custom formmatter to support in web api.
+
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.pragimtech.products.v1+json"));
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.pragimtech.products.v2+json"));
+
+            config.Formatters.XmlFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.pragimtech.products.v1+xml"));
+            config.Formatters.XmlFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.pragimtech.products.v2+xml"));
         }
     }
 }
