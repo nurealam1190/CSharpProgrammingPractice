@@ -41,7 +41,7 @@ namespace EmployeeService
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromSeconds(60),
+                AccessTokenExpireTimeSpan = TimeSpan.FromHours(1),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
             };
@@ -64,10 +64,10 @@ namespace EmployeeService
 
             var facebookOptions = new FacebookAuthenticationOptions()
             {
-                AppId = "850382982058879",
-                AppSecret = "ea91320d58389b611384267ab8817e72",
+                AppId = "2680168228728023",
+                AppSecret = "0b3ded81368067a46ac662bc608102f3",
                 BackchannelHttpHandler = new FacebookBackChannelHandler(),
-                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,email"
+                UserInformationEndpoint = "https://graph.facebook.com/v2.8/me?fields=id,email"
             };
 
             facebookOptions.Scope.Add("email");

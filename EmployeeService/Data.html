@@ -8,35 +8,42 @@
 </head>
 <body style="padding-top: 20px">
     <div class="col-md-10 col-md-offset-1">
-        <div class="well">
+        <div class=" well" id="main-container">
+        <div class="well" id="child-container">
             <input type="button" id="btnloademployees" class="btn btn-success" value="Load All Employees" />
             <span id="spanusername" class="text-muted"></span>
+
+
             <input type="button" id="btnlogout" class="btn btn-danger pull-right" value="Logout" />
-        </div>
-        <div class="well hidden" id="divData">
-            <table class=" table table-bordered" id="tblData">
-                <thead>
-                    <tr>
-                        <th>
-                            ID
-                        </th>
-                        <th>
-                            First Name
-                        </th>
-                        <th>
-                            Last Name
-                        </th>
-                        <th>
-                            Gender
-                        </th>
-                        <th>
-                            Salary
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="tblbody"></tbody>
-            </table>
-        </div>
+            <a style="margin-right:50px" id="btnAddEmployee" class="btn btn-success pull-right" href="NewEmployee.html">Add Employee</a>
+
+            <div class="well hidden" id="divData">
+                <table class=" table table-bordered" id="tblData">
+                    <thead>
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                First Name
+                            </th>
+                            <th>
+                                Last Name
+                            </th>
+                            <th>
+                                Gender
+                            </th>
+                            <th>
+                                Salary
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblbody"></tbody>
+                </table>
+            </div>
 
             <div class="modal fade" tabindex="-1" id="errorModal" data-keyboard="false" data-backdrop="static">
                 <div class="modal-dialog ">
@@ -69,90 +76,184 @@
                 </div>
             </div>
 
-        
 
-    </div>
-    <script src="Scripts/jquery-3.4.1.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
 
-    <script type="text/javascript">
-        //To remove/get/set accesstoken from local
+        </div>
+        </div>
+        <script src="Scripts/jquery-3.4.1.min.js"></script>
+        <script src="Scripts/bootstrap.min.js"></script>
+        <script src="Scripts/GoogleAuthentication.js"></script>
 
-       // localStorage.setItem('accesstoken'); ---Set
-        // localStorage.getItem('accesstoken'); --Get
-        // localStorage.removeItem('accesstoken'); ---Remove
+        <!--<script src="Scripts/jquery.min.js"></script>-->
 
-        //To remove/get/set accesstoken from session
+        <script type="text/javascript">
+            //To remove/get/set accesstoken from local
 
-       // sessionStorage.setItem('accesstoken'); ---Set
-        // sessionstorage.getItem('accesstoken'); --Get
-        // localStorage.removeItem('accesstoken'); ---Remove
+            // localStorage.setItem('accesstoken'); ---Set
+            // localStorage.getItem('accesstoken'); --Get
+            // localStorage.removeItem('accesstoken'); ---Remove
 
-        $(document).ready(function () {
+            //To remove/get/set accesstoken from session
 
-            if (sessionStorage.getItem('accesstoken') == null) {
-                window.location.href ="Login.html"
-            }
+            // sessionStorage.setItem('accesstoken'); ---Set
+            // sessionstorage.getItem('accesstoken'); --Get
+            // localStorage.removeItem('accesstoken'); ---Remove
 
-            $('#spanusername').text('Hello '+ sessionStorage.getItem('UserName'));
 
-            $('#linkClose').click(function () {
-                $('#divError').hide('fade');
-               
-            });
-            $('#errorModal').on('hidden.bs.modal', function () {
-                window.location.href = "Login.html";
-            });
-            $('#btnloademployees').click(function () {
-               
-                
-                    $.ajax({
+            //To edit the record
+            function getUserDetails(elm) {
+                var id = $(elm).closest("tr").find("td:first-child").text();
 
-                    url: '/api/Employees',
-                    method: 'GET',
-                        headers: {
-                            'Authorization': 'Bearer ' + sessionStorage.getItem('accesstoken')
+                var jqxhr = $.ajax({
+                    url: "/api/Employees", type: "GET", accepts: "application/xml",
+                    data: {
+                        id: id
                     },
-
                     success: function (data) {
-                        // $('#successModal').modal('show');
-                        $('#divData').removeClass('hidden');
-                        $('#tblbody').empty();
-                        $.each(data, function (index, value) {
-                            var row = $('<tr><td>' + value.ID + '</td><td>'
-                                + value.FirstName + '</td><td>'
-                                + value.LastName + '</td><td>'
-                                + value.Gender + '</td><td>'
-                                + value.Salary + '</td></tr>');
-
-
-                            $('#tblData').append(row);
-                        });
-                    },
-                    error: function (jqXHR) {
-                        if (jqXHR.status == '401') {
-                            $('#errorModal').modal('show');
-                            
+                        console.log(data);
+                        var emp = data;
+                       // var gen = data.Gender;
+                        var row1 = '<div class="well"><table class="table table-bordered"><thead><tr class="success"><td colspan="2">Edit Employee Details</td></tr></thead><tbody> ' +
+                                    '<tr class="hidden"><td>ID: </td>' + '<td><input type="text" id="txtId" value="' + emp.ID + '"/> </td></tr>'+
+	                               '<tr><td>First Name: </td>' + '<td><input type="text" id="txtFirstName" value="' + emp.FirstName + '"/> </td></tr>'+
+                            '<tr><td>Last Name: </td>' + '<td><input type="text" id="txtLastName" value="' + emp.LastName + '"/> </td></tr>'
+                        if (data.Gender == "Male") {
+                            row1 = row1 + '<tr><td>Gender: </td>' + '<td><select class="dropdown" id="drdGender"><option value="Male" selected="true">Male</option><option value="Female" >Female</option></select> </td></tr>';
                         }
                         else {
-                            $('#errorText').text(jqXHR.responseText);
-                            $('#divError').show('fade');
+                            row1 = row1 + '<tr><td>Gender: </td>' + '<td><select class="dropdown" id="drdGender"><option value="Male">Male</option><option value="Female" selected="true">Female</option></select> </td></tr>';
                         }
+
+                        
+                            var row2=   '<tr><td>Salary: </td>' + '<td><input type="text" id="txtSalary" value="' + emp.Salary + '"/> </td></tr>' +
+                            '<tr class="success"><td colspan="2"><input type="button" id="btnUpdate" class="btn btn-success" value="Update" onclick="UpdateUserDetails(this)"></td></tr>' +
+
+                            '</tbody></table></div>'
+                        var row = row1 + row2;
+					
+                            $('#main-container').append(row);
                         
                     }
+                });
+                $('#child-container').addClass('hidden');
 
-                });            
-              
+            }
+
+            function UpdateUserDetails(elm) {
+                var id = $('#txtId').val();
+                
+                                
+
+                $.ajax({
+                    url: "/api/Employees/" + id, type: "PUT",
+                    data: {
+                        Id: id,
+                        FirstName: $('#txtFirstName').val(),
+                        LastName: $('#txtLastName').val(),
+                        Gender: $('#drdGender').val(),
+                        Salary: $('#txtSalary').val()
+                    },
+                    success: function () {
+                        window.location.href = "Data.html";
+                    }
+                });
+            }
+
+            //To delete the record.
+            function deleteEmployeeDetails(elm) {
+                var id = $(elm).closest("tr").find("td:first-child").text();
+                
+
+                var jqxhr = $.ajax({ url: "/api/Employees/" + id, method: "DELETE" }).done(x => {
+                    document.getElementById("btnloademployees").click();
+                });             
+                             
+
+            }
+
+            $(document).ready(function () {
+
+                if (sessionStorage.getItem('accesstoken') == null) {
+                    window.location.href = "Login.html"
+                }
+
+                $('#spanusername').text('Hello ' + sessionStorage.getItem('UserName'));
+
+                $('#linkClose').click(function () {
+                    $('#divError').hide('fade');
+
+                });
+                $('#errorModal').on('hidden.bs.modal', function () {
+                    window.location.href = "Login.html";
+                });
+                $('#btnloademployees').click(function () {
+                    
+
+                    $.ajax({
+
+                        url: '/api/Employees',
+                        method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + sessionStorage.getItem('accesstoken')
+                        },
+
+                        success: function (data) {
+                            // $('#successModal').modal('show');
+                            $('#divData').removeClass('hidden');
+                            $('#tblbody').empty();
+                            $.each(data, function (index, value) {
+                                var row = $('<tr><td>' + value.ID + '</td><td>'
+                                    + value.FirstName + '</td><td>'
+                                    + value.LastName + '</td><td>'
+                                    + value.Gender + '</td><td>'
+                                    + value.Salary + '</td><td>'
+                                    + '<input type="button" id="btnEditEmployee" class="btn btn-warning" value="Edit" onclick="getUserDetails(this)"/>' + '        '
+                                    + '<input type="button" id="btnDeleteEmployee" class="btn btn-danger" value="Delete" onclick="deleteEmployeeDetails(this)"/>' + '</td></tr > ');
+
+
+
+
+
+                                $('#tblData').append(row);
+                            });
+                        },
+                        error: function (jqXHR) {
+                            console.log(jqXHR.status);
+                            if (jqXHR.status == '401') {
+                                $('#errorModal').modal('show');
+                              
+
+                            }
+                            else {
+                                $('#errorText').text(jqXHR.responseText);
+                                $('#divError').show('fade');
+                               
+                            }
+
+                        }
+
+                    });
+
+
+
+                });
+
+
+                $('#btnlogout').click(function () {
+                    //To remove accesstoken from local
+                    //  localStorage.removeItem('accesstoken');
+                    //To remove accesstoken from session
+                    sessionStorage.removeItem('accesstoken');
+                    window.location.href = "Login.html";
+                })
+
+                
+
             });
-            $('#btnlogout').click(function () {
-                //To remove accesstoken from local
-              //  localStorage.removeItem('accesstoken');
-                //To remove accesstoken from session
-                sessionStorage.removeItem('accesstoken');
-                window.location.href = "Login.html";
-            })
-        });
-    </script>
+
+            
+        </script>
+    </div>
 </body>
 
 </html>

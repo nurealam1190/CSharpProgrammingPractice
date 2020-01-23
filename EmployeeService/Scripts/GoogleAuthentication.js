@@ -52,3 +52,4 @@ function signUpExternalUser(accessToken, provider) {
 
     });
 }
+

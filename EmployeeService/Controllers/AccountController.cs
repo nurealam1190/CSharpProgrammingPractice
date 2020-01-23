@@ -365,6 +365,12 @@ namespace EmployeeService.Controllers
             {
                 return GetErrorResult(result);
             }
+            else
+            {
+                var errors = result.Errors;
+                var message = string.Join(", ", errors);
+                ModelState.AddModelError("", message);
+            }
 
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
