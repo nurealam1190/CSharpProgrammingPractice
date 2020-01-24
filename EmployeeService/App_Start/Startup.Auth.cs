@@ -79,6 +79,8 @@ namespace EmployeeService
                 ClientId = "593133331439-643pju933hogn1en8j9ncog9drtv1uki.apps.googleusercontent.com",
                 ClientSecret = "bmnxUvfLfJ7UyLMbua-5neMl"
             });
+
+            
         }
     }
 }

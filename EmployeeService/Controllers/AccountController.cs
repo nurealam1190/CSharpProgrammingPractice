@@ -115,6 +115,7 @@ namespace EmployeeService.Controllers
         }
 
         // POST api/Account/ChangePassword
+        [HttpPost]
         [Route("ChangePassword")]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
