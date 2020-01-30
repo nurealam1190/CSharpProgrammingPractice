@@ -17,6 +17,7 @@ using EmployeeService.Models;
 using EmployeeService.Providers;
 using EmployeeService.Results;
 
+
 namespace EmployeeService.Controllers
 {
     [Authorize]
@@ -115,6 +116,7 @@ namespace EmployeeService.Controllers
         }
 
         // POST api/Account/ChangePassword
+        [HttpPost]
         [Route("ChangePassword")]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
@@ -365,6 +367,12 @@ namespace EmployeeService.Controllers
             {
                 return GetErrorResult(result);
             }
+            else
+            {
+                var errors = result.Errors;
+                var message = string.Join(", ", errors);
+                ModelState.AddModelError("", message);
+            }
 
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
@@ -489,6 +497,31 @@ namespace EmployeeService.Controllers
                 return HttpServerUtility.UrlTokenEncode(data);
             }
         }
+
+        //This method is for Remember Me functionality.
+       // [AllowAnonymous]
+       // [HttpPost]
+        //public IHttpActionResult RememberMe([FromBody] RememberMeBindingModel model)
+        //{
+        //    if (model.RememberMe==true)
+        //    {
+        //        //string user = HttpContext.Current.Request.Cookies["emailId"].Value;
+        //        //string psw = HttpContext.Current.Request.Cookies["password"].Value;
+        //        //HttpCookie cookie = new HttpCookie(“YourAppLogin”);
+        //        //cookie.Values.Add(“username”, txtUsername.Text);
+        //        //cookie.Expires = DateTime.Now.AddDays(15);
+        //        //Response.Cookies.Add(cookie);
+
+        //        HttpCookie cookie = new HttpCookie("MyApp");
+        //        cookie.Values.Add("emailId", model.EmailId);
+        //        cookie.Values.Add("password", model.Password);
+        //        cookie.Expires = DateTime.Now.AddDays(3);
+        //        HttpContext.Current.Response.Cookies.Add(cookie);
+               
+        //    }
+
+        //    return Ok();
+        //}
 
         #endregion
     }

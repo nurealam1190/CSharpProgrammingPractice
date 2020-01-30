@@ -32,6 +32,26 @@ namespace EmployeeService.Models
         public string ConfirmPassword { get; set; }
     }
 
+    //Creating this class for RememberMe functionality
+    //public class RememberMeBindingModel
+    //{
+    //    [Required]
+    //    [DataType(DataType.Text)]
+    //    [Display(Name = "Remember Me")]
+    //    public bool RememberMe { get; set; }
+
+    //    [Required]
+    //    [DataType(DataType.EmailAddress)]
+    //    [Display(Name = "User Email")]
+    //    public string EmailId { get; set; }
+
+    //    [Required]
+    //    [DataType(DataType.Password)]
+    //    [Display(Name = "User Password")]
+    //    public string Password { get; set; }
+
+    //}
+
     public class RegisterBindingModel
     {
         [Required]
